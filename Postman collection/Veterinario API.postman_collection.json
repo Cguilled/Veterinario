@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "d529314a-531a-4d25-b937-9c978e41cbe3",
+		"name": "Veterinario API",
+		"description": "# Clínica Veterinaria – Backend Serverless en AWS\n\nBackend serverless para una aplicación de gestión de una clínica veterinaria, desarrollado en **Java 11** sobre **AWS**, utilizando una arquitectura desacoplada, escalable y orientada a eventos.\n\nEl sistema permite gestionar **mascotas**, sus **enfermedades** y un mecanismo automático de **vigilancia de mascotas** mediante **DynamoDB Streams**.\n\n---\n\n## Arquitectura\n\nLa aplicación está construida íntegramente con servicios serverless de AWS:\n\n- AWS Lambda\n    \n- Amazon API Gateway\n    \n- Amazon DynamoDB\n    \n- DynamoDB Streams\n    \n- AWS IAM\n    \n- AWS Lambda Layers\n    \n\n---\n\n## Endpoints REST\n\n| Método | Endpoint | Descripción |\n| --- | --- | --- |\n| POST | /mascotas | Crear una mascota |\n| GET | /mascotas/{mascotaId} | Obtener una mascota |\n| DELETE | /mascotas/{mascotaId} | Eliminar una mascota |\n| POST | /mascotas/{mascotaId}/enfermedades | Crear una enfermedad |\n| GET | /mascotas/{mascotaId}/enfermedades | Obtener enfermedades de una mascota |\n\nURL base [https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev](https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev)\n\nPOST URL base/mascotas  \nGET URL base/mascotas/{mascotaId}  \nDELETE URL base/mascotas/{mascotaId}  \nPOST URL base/mascotas/{mascotaId}/enfermedades  \nGET URL base/mascotas/{mascotaId}/enfermedades\n\n---\n\n## Lambdas implementadas\n\n- CreateMascota\n    \n- GetMascota\n    \n- DeleteMascota\n    \n- CreateEnfermedad\n    \n- GetEnfermedad\n    \n- MascotasProcessor (trigger de DynamoDB Streams)\n    \n\n### URL github: [https://github.com/Cguilled/Veterinario](https://github.com/Cguilled/Veterinario)\n\n### URL usuario AWS: [https://d-cb67121199.awsapps.com/start](https://d-cb67121199.awsapps.com/start)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20167125"
+	},
+	"item": [
+		{
+			"name": "Consultar mascota",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev/mascotas/b1dffdd3-1d22-4bf3-9a34-57ed8f6ad2e6",
+					"protocol": "https",
+					"host": [
+						"amoaisf75j",
+						"execute-api",
+						"eu-south-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"mascotas",
+						"b1dffdd3-1d22-4bf3-9a34-57ed8f6ad2e6"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "Registrar mascota",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"mascotaId\": \"0ff7fd0b-b9d3-4e14-bc44-571d20793189\",\r\n\t\"nombre\": \"Copito de nieve\",\r\n\t\"edad\": 33,\r\n\t\"raza\": \"Gorila\",\r\n\t\"numVacunas\": 14,\r\n\t\"motivoConsulta\": \"Cáncer de piel\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev/mascotas",
+					"protocol": "https",
+					"host": [
+						"amoaisf75j",
+						"execute-api",
+						"eu-south-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"mascotas"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Baja mascota",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev/mascotas/33b95c9d-a68d-4db0-9fcd-c7141fae027b",
+					"protocol": "https",
+					"host": [
+						"amoaisf75j",
+						"execute-api",
+						"eu-south-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"mascotas",
+						"33b95c9d-a68d-4db0-9fcd-c7141fae027b"
+					]
+				},
+				"description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar enfermedades por mascota",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev/mascotas/201b2d9a-eee0-4577-80c3-e3aa0fc8d62a/enfermedades",
+					"protocol": "https",
+					"host": [
+						"amoaisf75j",
+						"execute-api",
+						"eu-south-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"mascotas",
+						"201b2d9a-eee0-4577-80c3-e3aa0fc8d62a",
+						"enfermedades"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Registrar enfermedad",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"mascotaId\": \"33b95c9d-a68d-4db0-9fcd-c7141fae027b\",\r\n\t\"enfermedadId\": \"ENF-003\",\r\n\t\"enfermedad\": \"Gastroenteritis\",\r\n\t\"tratamiento\": [\"Dieta blanda\", \"Suero\", \"Probióticos\"] \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://amoaisf75j.execute-api.eu-south-2.amazonaws.com/dev/mascotas/33b95c9d-a68d-4db0-9fcd-c7141fae027b/enfermedades",
+					"protocol": "https",
+					"host": [
+						"amoaisf75j",
+						"execute-api",
+						"eu-south-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"mascotas",
+						"33b95c9d-a68d-4db0-9fcd-c7141fae027b",
+						"enfermedades"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://template.postman-echo.com"
+		}
+	]
+}
